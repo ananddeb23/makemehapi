@@ -1,13 +1,31 @@
-axios.get('http://localhost:8080/Anand')
-  .then((response) => {
-    if (response.data === 'Hello Anand') {
-      console.log(response.data, 'Success');
-    }
-    // console.log(response);
-    server.stop();
-  })
-  .catch((error) => {
-    console.log(error);
-    console.log('Failed');
-    server.stop();
+
+
+const Server = require('./solution');
+
+describe('ping controller', () => {
+  const options = {
+    method: 'GET',
+    url: 'http://localhost:9080/anand',
+  };
+
+  beforeAll((done) => {
+    Server.on('start', () => {
+      done();
+    });
   });
+
+  afterAll((done) => {
+    Server.on('stop', () => {
+      done();
+    });
+    Server.stop();
+  });
+
+  test('responds with success for ping', (done) => {
+    Server.inject(options, (response) => {
+      // expect(response.statusCode).toBe(200);
+      expect(response.data).toBe('Hello anand');
+      done();
+    });
+  });
+});
